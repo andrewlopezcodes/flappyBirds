@@ -31,13 +31,28 @@
     ctx = canvas.getContext("2d");
 
     document.body.appendChild(canvas);
+
+    var img = new Image();
+    img.onload = function(){
+      initSprites(this);
+      run();
+    }
+    img.src = "res/sheet.png";
   }
 
   function run(){
-
+    var loop = function(){
+      update();
+      render();
+      window.requestAnimationFrame(loop, canvas);
+    }
+    window.requestAnimationFrame(loop, canvas);
   }
 
   function update(){}
-  function render(){}
+  function render(){
+    s_bg.draw(ctx, 0, height - s_bg.height);
+    s_bg.draw(ctx, s_bg.width, height - s_bg.height);
+  }
 
   main();
