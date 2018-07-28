@@ -50,7 +50,12 @@
     window.requestAnimationFrame(loop, canvas);
   }
 
-  function update(){}
+  function update(){
+    frames++;
+    fgpos = (fgpos - 2) % 14;
+  }
+
+
   function render(){
     s_bg.draw(ctx, 0, height - s_bg.height);
     s_bg.draw(ctx, s_bg.width, height - s_bg.height);
