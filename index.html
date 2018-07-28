@@ -7,7 +7,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>FlappyJS</title>
     <script src="sprite.js"></script>
-    <link rel="stylesheet" href="floppy.css">
     <style media="screen">
     canvas{
       display: block;
@@ -41,7 +40,7 @@
       }
 
       bird = {
-        x: 80,
+        x: 60,
         y: 0,
         frame: 0,
         velocity: 0,
@@ -58,7 +57,8 @@
           this.frame += frames % n === 0 ? 1 : 0;
           this.frame %= this.animation.length;
           if(currentstate === states.Splash){
-            this.y = height - 280 + 5*Math.cos(frames/10)
+            this.y = height - 280 + 5*Math.cos(frames/10);
+            this.rotation = 0;
           }
         },
         draw: function(ctx){
@@ -131,6 +131,13 @@
 
         s_fg.draw(ctx, fgpos, height -s_fg.height);
         s_fg.draw(ctx, fgpos+s_fg.width, height -s_fg.height);
+
+        var width2 = width/2;
+
+        if (currentstate === states.Splash){
+          s_splash.draw(ctx, width2 - s_splash.width/2, height - 300);
+          s_text.GetReady.draw(ctx, width2 - s_text.GetReady.width/2, height-380);
+        }
       }
 
       main();
