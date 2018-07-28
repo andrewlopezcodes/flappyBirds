@@ -4,6 +4,7 @@
   ctx,
   width,
   height,
+  fgpos = 0,
   frames = 0,
   score = 0,
   best = 0,
@@ -53,6 +54,8 @@
   function render(){
     s_bg.draw(ctx, 0, height - s_bg.height);
     s_bg.draw(ctx, s_bg.width, height - s_bg.height);
+    s_fg.draw(ctx, fgpos, height -s_fg.height);
+    s_fg.draw(ctx, fgpos+s_fg.width, height -s_fg.height);
   }
 
   main();
