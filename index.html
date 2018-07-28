@@ -37,7 +37,9 @@
       currentstate,
       states = {
         Splash: 0, Games: 1, Score: 2
-      }
+      },
+
+      okbtn,
 
       bird = {
         x: 60,
@@ -53,6 +55,7 @@
         jump: function(){
           this.velocity = -this._jump;
         },
+
         update: function(){
           var n = currentstate === states.Splash ? 10 : 5;
           this.frame += frames % n === 0 ? 1 : 0;
@@ -79,6 +82,7 @@
             }
           }
         },
+
         draw: function(ctx){
           ctx.save();
           ctx.translate(this.x, this.y);
@@ -96,6 +100,7 @@
       pipes = {
         _pipes: [],
         reset: function(){
+          this._pipes =[];
 
         },
         update: function(){
@@ -112,6 +117,10 @@
             var p = this._pipes[i];
 
             if(i === 0) {
+
+              score += p.x === bird.x ? 1 : 0;
+
+
               var cx = Math.min(Math.max(bird.x, p.x), p.x+p.width);
               var cy1 = Math.min(Math.max(bird.y, p.y), p.y+p.height);
               var cy2 = Math.min(Math.max(bird.y, p.y+p.height+80), p.y+2*p.height+80);
@@ -138,6 +147,7 @@
             }
           }
         },
+
         draw: function(ctx){
         for(var i=0, len = this._pipes.length; i < len; i++){
           var p = this._pipes[i];
@@ -157,6 +167,18 @@
             bird.jump();
             break;
           case states.Score:
+            var mx = evt.offsetX, my = evt.offsetY;
+
+            if(mx == null || my == null){
+              mx = evt.touches[0].clientX;
+              my = evt.touches[0].clientY;
+            }
+
+            if (okbtn.x < mx && mx < okbtn.x + okbtn.width && okbtn.y < my && my < okbtn.y + okbtn.height){
+              pipes.reset();
+              currentstate = states.Splash;
+              score = 0;
+            }
             break;
         }
       }
@@ -189,6 +211,14 @@
         img.onload = function(){
           initSprites(this);
           ctx.fillStyle = s_bg.color;
+
+          okbtn = {
+            x: (width - s_buttons.Ok.width)/2,
+            y: height - 200,
+            width: s_buttons.Ok.width,
+            height: s_buttons.Ok.height
+          }
+
           run();
         }
         img.src = "res/sheet.png";
@@ -207,10 +237,13 @@
         frames++;
         if(currentstate !== states.Score){
           fgpos = (fgpos - 2) % 14;
+        } else {
+          best = Math.max(best, score);
         }
         if(currentstate === states.Game){
           pipes.update();
         }
+
 
 
         bird.update();
@@ -238,6 +271,12 @@
         }
         if(currentstate === states.Score){
           s_text.GameOver.draw(ctx, width2-s_text.GameOver.width/2, height-400);
+          s_score.draw(ctx, width2-s_score.width/2, height-340);
+          s_buttons.Ok.draw(ctx, okbtn.x, okbtn.y);
+          s_numberS.draw(ctx, width2-47, height-304, score, null, 10);
+          s_numberS.draw(ctx, width2-47, height-262, best, null, 10);
+        } else {
+          s_numberB.draw(ctx, null, 20, score, width2);
         }
       }
 
